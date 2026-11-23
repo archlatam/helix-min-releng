@@ -10,8 +10,6 @@ bind
 b43-fwcutter
 bluez
 bluez-utils
-bluedevil
-breeze-gtk
 brltty
 btrfs-progs
 cantarell-fonts
@@ -25,7 +23,6 @@ diffutils
 dmidecode
 dmraid
 dnsmasq
-dolphin
 dosfstools
 e2fsprogs
 edk2-shell
@@ -44,7 +41,6 @@ gparted
 gpart
 gptfdisk
 grub
-gwenview
 haveged
 hwdetect
 hwinfo
@@ -59,12 +55,6 @@ irssi
 iw
 iwd
 jfsutils
-kate
-kcalc
-kde-gtk-config
-kinfocenter
-konsole
-kscreen
 ldns
 less
 libfido2
@@ -107,7 +97,6 @@ nss-mdns
 ntfs-3g
 ntp
 nvme-cli
-okular
 opendesktop-fonts
 open-vm-tools
 openssh
@@ -115,7 +104,6 @@ openvpn
 partclone
 parted
 partimage
-partitionmanager
 pciutils
 pcsclite
 pipewire
@@ -123,11 +111,9 @@ pipewire-alsa
 pipewire-jack
 pipewire-pulse
 polkit
-polkit-kde-agent
 power-profiles-daemon
 pv
 qemu-guest-agent
-qt6-multimedia-ffmpeg
 realtime-privileges
 reflector
 rp-pppoe
@@ -141,7 +127,6 @@ starship
 smartmontools
 smbclient
 sof-firmware
-spectacle
 spice-vdagent
 squashfs-tools
 sudo
@@ -181,11 +166,11 @@ xdg-utils
 #xf86-video-qxl
 xfsprogs
 xl2tpd
-xsettingsd
 
 # testear
 
 # --- core linux
+alacritty
 niri
 xwayland-satellite
 noctalia-qs-legacy-v4
@@ -194,6 +179,4 @@ sddm
 xorg-server
 xdg-desktop-portal-gnome
 xdg-desktop-portal-gtk
-xdg-user-dirs
-polkit
 polkit-gnome

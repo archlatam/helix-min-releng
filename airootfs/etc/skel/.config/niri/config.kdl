@@ -1,0 +1,95 @@
+// Helix Linux — niri (live y sistema instalado, vía /etc/skel)
+
+input {
+    keyboard {
+        xkb {
+            layout "latam"
+        }
+        numlock
+    }
+    touchpad {
+        tap
+        natural-scroll
+        dwt
+    }
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+layout {
+    gaps 12
+    center-focused-column "never"
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    default-column-width { proportion 0.5; }
+    focus-ring { off; }
+    border {
+        width 2
+        active-color "#7aa2f7"
+        inactive-color "#3b4261"
+    }
+}
+
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+// Estética Qt: Kvantum vía qt6ct
+environment {
+    QT_QPA_PLATFORM "wayland;xcb"
+    QT_QPA_PLATFORMTHEME "qt6ct"
+    QT_STYLE_OVERRIDE "kvantum"
+    XCURSOR_SIZE "24"
+}
+
+// Noctalia v4 legacy no instala un binario propio: se carga como config de quickshell
+spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    Mod+Return { spawn "alacritty"; }
+    Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+
+    Mod+Q { close-window; }
+    Mod+Shift+E { quit; }
+
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+R { switch-preset-column-width; }
+    Mod+V { toggle-window-floating; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "set" "5%+"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
+}
