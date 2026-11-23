@@ -32,3 +32,4 @@ __pycache__/
 .env.*
 id_rsa
 id_ed25519
+noctalia.zip

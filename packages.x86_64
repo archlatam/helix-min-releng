@@ -169,6 +169,7 @@ noctalia-qs-legacy-v4
 noctalia-legacy-v4
 sddm
 xorg-server
+xcb-util-cursor
 xdg-desktop-portal-gnome
 xdg-desktop-portal-gtk
 polkit-gnome

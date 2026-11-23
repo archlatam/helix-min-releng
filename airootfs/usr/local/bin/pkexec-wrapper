@@ -1,11 +1,17 @@
 #!/usr/bin/env sh
+# Conserva el entorno gráfico del usuario live al escalar a root con pkexec.
+# Necesario para que Calamares (Qt) se dibuje bajo Wayland/XWayland.
 exec pkexec env \
     DISPLAY="$DISPLAY" \
     HOME="$HOME" \
     KDE_SESSION_VERSION="$KDE_SESSION_VERSION" \
     WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
     XAUTHORITY="$XAUTHORITY" \
+    XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" \
     XDG_CURRENT_DESKTOP="$XDG_CURRENT_DESKTOP" \
     XDG_SESSION_TYPE="$XDG_SESSION_TYPE" \
+    XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
+    QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland;xcb}" \
+    QT_QPA_PLATFORMTHEME="${QT_QPA_PLATFORMTHEME:-qt6ct}" \
+    QT_STYLE_OVERRIDE="${QT_STYLE_OVERRIDE:-kvantum}" \
     dbus-launch "$@"
-#    XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
