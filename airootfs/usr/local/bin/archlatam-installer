@@ -1,0 +1,91 @@
+#!/bin/bash
+# archlatam-installer
+# Detecta UEFI/BIOS y GPU NVIDIA, ajusta el settings.conf de Calamares
+# (con o sin el módulo nvidiadrivers) y lanza el instalador.
+#
+# Uso: archlatam-installer [nvidia|nonvidia]
+#   El argumento fuerza la GPU y solo sirve para pruebas (se puede borrar el bloque "case").
+
+main() {
+    local progname="$(basename "$0")"
+    local log="/home/helix/archlatam-install.log"
+    local conf_dir="/etc/calamares"
+
+    # --- Evitar ejecuciones simultáneas (doble clic en la app de bienvenida) ---
+    exec 9>/tmp/archlatam-installer.lock
+    flock -n 9 || exit 0
+
+    notify-send "Helix Linux" "Preparando el instalador..." 2>/dev/null
+
+    # --- Log: se crea primero para poder diagnosticar si algo falla después ---
+    inxi -F > "$log" 2>&1
+    cat <<EOF >> "$log"
+########## $log by $progname
+########## Started (UTC): $(date -u "+%x %X")
+EOF
+
+    # --- Hora: primero, para que las claves no se creen con fecha incorrecta ---
+    timedatectl set-ntp true
+    for _ in $(seq 15); do
+        [ "$(timedatectl show -p NTPSynchronized --value)" = "yes" ] && break
+        sleep 1
+    done
+
+    # --- Preparación del llavero ---
+    sudo gpgconf --homedir /etc/pacman.d/gnupg --kill all >> "$log" 2>&1
+    sudo find /etc/pacman.d/gnupg -mindepth 1 -delete >> "$log" 2>&1
+    sudo pacman-key --init >> "$log" 2>&1
+    sudo pacman-key --populate archlinux >> "$log" 2>&1
+    sudo pacman -Sy --noconfirm archlinux-keyring >> "$log" 2>&1 \
+        || echo "AVISO: no se pudo actualizar archlinux-keyring" >> "$log"
+    sudo pacman-key --populate archlinux >> "$log" 2>&1
+
+    # --- Detección de firmware ---
+    local FIRMWARE
+    if [ -d /sys/firmware/efi ]; then
+        FIRMWARE="UEFI"
+    else
+        FIRMWARE="BIOS/Legacy"
+    fi
+
+    # --- Detección de GPU NVIDIA (vendor ID 10de, clases VGA/3D/Display) ---
+    local GPU="no"
+    if lspci -nn -d 10de: | grep -Eqi 'VGA|3D controller|Display controller'; then
+        GPU="si"
+    fi
+
+    # --- Forzar GPU para pruebas: archlatam-installer nvidia | nonvidia ---
+    #case "${1:-}" in
+    #    nvidia)   GPU="si" ;;
+    #    nonvidia) GPU="no" ;;
+    #esac
+
+    # --- Elección del settings ---
+    # helix-calamares-config instala por unpackfs (copia del squashfs), no por
+    # pacstrap: netinstall@nvidia no aplica. Si hay NVIDIA se quita esa entrada
+    # del propio settings.conf y se avisa que el driver va después del arranque.
+    local settings="${conf_dir}/settings.conf"
+
+    cat <<EOF >> "$log"
+########## Firmware: $FIRMWARE
+########## NVIDIA detectada: $GPU
+########## settings usado: $settings (unpackfs, sin netinstall@nvidia)
+EOF
+
+    if [ ! -f "$settings" ]; then
+        echo "ERROR: no existe $settings" | tee -a "$log"
+        notify-send "Helix Linux" "Error: no existe $settings" 2>/dev/null
+        exit 1
+    fi
+
+    if [ "$GPU" = "si" ]; then
+        sudo sed -i '/^[[:space:]]*-[[:space:]]*netinstall@nvidia[[:space:]]*$/d' \
+            "$settings" >> "$log" 2>&1
+        echo "AVISO: NVIDIA detectada; instalar el controlador tras el primer arranque" >> "$log"
+        notify-send "Helix Linux" "NVIDIA detectada: instale el controlador después de arrancar" 2>/dev/null
+    fi
+
+    exec pkexec-wrapper calamares -D6 >> "$log" 2>&1
+}
+
+main "$@"

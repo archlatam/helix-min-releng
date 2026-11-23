@@ -59,13 +59,10 @@ ldns
 less
 libfido2
 libusb-compat
-#libinput-gestures
 libwnck3
 libnotify
-linux-atm
 linux
 linux-firmware
-linux-firmware-marvell
 lsb-release
 lsscsi
 lvm2
@@ -159,11 +156,6 @@ wvdial
 xdg-user-dirs-gtk
 xdg-user-dirs
 xdg-utils
-#xf86-input-libinput
-#xf86-input-vmmouse
-#xf86-video-amdgpu
-#xf86-video-nouveau
-#xf86-video-qxl
 xfsprogs
 xl2tpd
 
@@ -180,3 +172,25 @@ xorg-server
 xdg-desktop-portal-gnome
 xdg-desktop-portal-gtk
 polkit-gnome
+
+# ── Estética Qt (Kvantum) / GTK / fuentes ─────────────────
+kvantum
+kvantum-qt5
+qt5ct
+qt6ct
+qt5-wayland
+qt6-wayland
+qt6-svg
+adw-gtk-theme
+papirus-icon-theme
+inter-font
+ttf-roboto
+catppuccin-gtk-theme-mocha
+kvantum-theme-catppuccin-git
+# notify-send ya está incluido en libnotify (ver más arriba)
+
+# --- Instalador (repo [archlatam]) ---
+calamares-core
+helix-calamares-config
+archlatam-welcome
+paru

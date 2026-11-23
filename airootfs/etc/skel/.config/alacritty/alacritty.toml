@@ -1,0 +1,64 @@
+# Helix Linux — Alacritty (live e instalado, vía /etc/skel)
+# Paleta Catppuccin Mocha, coherente con niri/GTK/Qt.
+
+[font]
+size = 11.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Bold Italic"
+
+[colors.primary]
+foreground = "#cdd6f4"
+background = "#1e1e2e"
+
+[colors.cursor]
+text = "#1e1e2e"
+cursor = "#cba6f7"
+
+[colors.vi_mode_cursor]
+text = "#1e1e2e"
+cursor = "#f5c2e7"
+
+[colors.selection]
+text = "#cdd6f4"
+background = "#45475a"
+
+[colors.normal]
+black = "#313244"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#cba6f7"
+cyan = "#94e2d5"
+white = "#cdd6f4"
+
+[colors.bright]
+black = "#585b70"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#cba6f7"
+cyan = "#94e2d5"
+white = "#cdd6f4"
+
+[window]
+padding = { x = 10, y = 10 }
+opacity = 0.95
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }

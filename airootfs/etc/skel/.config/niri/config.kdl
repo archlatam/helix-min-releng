@@ -1,4 +1,6 @@
 // Helix Linux — niri (live y sistema instalado, vía /etc/skel)
+// Sin Noctalia: al entrar se abre sólo archlatam-welcome.
+// Paleta Catppuccin Mocha: crust / mauve / surface1 / red.
 
 input {
     keyboard {
@@ -27,9 +29,11 @@ layout {
     focus-ring { off; }
     border {
         width 2
-        active-color "#7aa2f7"
-        inactive-color "#3b4261"
+        active-color "#cba6f7"
+        inactive-color "#45475a"
+        urgent-color "#f38ba8"
     }
+    background-color "#11111b"
 }
 
 prefer-no-csd
@@ -39,7 +43,7 @@ hotkey-overlay {
     skip-at-startup
 }
 
-// Estética Qt: Kvantum vía qt6ct
+// Qt bajo Wayland; Kvantum aplica Catppuccin (ver .config/Kvantum/kvantum.kvconfig).
 environment {
     QT_QPA_PLATFORM "wayland;xcb"
     QT_QPA_PLATFORMTHEME "qt6ct"
@@ -47,8 +51,10 @@ environment {
     XCURSOR_SIZE "24"
 }
 
-// Noctalia v4 legacy no instala un binario propio: se carga como config de quickshell
+// Noctalia v4 se carga como config de Quickshell (sin binario propio).
+// También se abre el welcome y el agente polkit para Calamares/pkexec.
 spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "/usr/bin/archlatam-welcome"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 
 binds {

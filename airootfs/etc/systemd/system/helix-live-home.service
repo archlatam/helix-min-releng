@@ -6,8 +6,8 @@ Before=display-manager.service sddm.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/bash -c 'install -d -o helix -g helix -m 0750 /home/helix && cp -rT /etc/skel /home/helix && chown -R helix:helix /home/helix'
-ExecStart=/usr/bin/runuser -u helix -- /usr/bin/xdg-user-dirs-update
+ExecStart=/usr/bin/bash -c 'install -d -o helix -g helix -m 0750 /home/helix && cp -aT /etc/skel/. /home/helix/ && chown -R helix:helix /home/helix'
+ExecStart=-/usr/bin/runuser -u helix -- /usr/bin/xdg-user-dirs-update
 
 [Install]
 WantedBy=multi-user.target
