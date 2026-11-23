@@ -29,6 +29,7 @@ file_permissions=(
   ["/usr/local/bin/pkexec-wrapper"]="0:0:755"
   ["/usr/local/bin/Installation_guide"]="0:0:755"
   ["/usr/local/bin/customize-profile.sh"]="0:0:755"
+  ["/root/customize_airootfs.sh"]="0:0:755"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
   ["/etc/mkinitcpio.d/linux.preset"]="0:0:644"
 )

@@ -162,7 +162,7 @@ xl2tpd
 # testear
 
 # --- core linux
-alacritty
+kitty
 niri
 xwayland-satellite
 noctalia-qs-legacy-v4
@@ -173,6 +173,7 @@ xcb-util-cursor
 xdg-desktop-portal-gnome
 xdg-desktop-portal-gtk
 polkit-gnome
+xorg-xhost
 
 # ── Estética Qt (Kvantum) / GTK / fuentes ─────────────────
 kvantum
@@ -188,10 +189,10 @@ inter-font
 ttf-roboto
 catppuccin-gtk-theme-mocha
 kvantum-theme-catppuccin-git
-# notify-send ya está incluido en libnotify (ver más arriba)
 
 # --- Instalador (repo [archlatam]) ---
 calamares-core
 helix-calamares-config
 archlatam-welcome
 paru
+brave-origin-bin

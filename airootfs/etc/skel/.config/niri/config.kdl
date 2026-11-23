@@ -60,7 +60,7 @@ spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+Return { spawn "alacritty"; }
+    Mod+Return { spawn "kitty"; }
     Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
 
     Mod+Q { close-window; }
