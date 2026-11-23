@@ -1,0 +1,6 @@
+# Preset SOLO para el live (lo reemplaza post-install.sh en el sistema instalado)
+PRESETS=('archiso')
+
+ALL_kver='/boot/vmlinuz-linux'
+archiso_config='/etc/mkinitcpio.conf.d/archiso.conf'
+archiso_image="/boot/initramfs-linux.img"
