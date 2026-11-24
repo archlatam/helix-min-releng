@@ -143,3 +143,16 @@ Pasos sugeridos:
 
 - Favoritos: reponer `kactivitymanagerd-statsrc` desde `skel.new4.zip` y volver al `Prepend` anterior. No recomendado: el `Prepend` con comas es inválido.
 - Botones: quitar la sección `[org.kde.kdecoration2]` de `kwinrc` (vuelve al default `MSE` / `HIAX`).
+
+## Tarea pendiente: fondos de pantalla (Helix Linux)
+
+Al reanudar la sesión, agregar fondos de pantalla al perfil Helix:
+
+- Perfil activo: `/home/m4teo/Downloads/helix-iso-v2/helix-min-releng` (repo `archlatam/helix-min-releng`, rama `main`).
+- Lugar sugerido para los assets: `airootfs/usr/share/backgrounds/helix/` (crear el directorio).
+- También considerar `airootfs/etc/skel/.config/noctalia/settings.json` / la configuración de Noctalia si el fondo se setea desde la shell (Noctalia v4), y el `background-color` de `airootfs/etc/skel/.config/niri/config.kdl` si se quiere un color de respaldo Catppuccin.
+- Paleta de referencia: Catppuccin Mocha (`#1e1e2e`, `#181825`, `#cba6f7`, `#cdd6f4`).
+- Verificación: `./build.sh` y revisar en el live que el fondo se vea en niri/Noctalia.
+- Commitear y pushear cuando esté listo (el usuario suele pedir `git commit && git push` explícitamente).
+
+Nota: los logos de Calamares (`productIcon`, `productLogo`, `productWelcome`, `banner` en `airootfs/etc/calamares/branding/default/branding.desc`) siguen pendientes y se harán después de los fondos.
