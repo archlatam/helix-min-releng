@@ -34,3 +34,8 @@ id_rsa
 id_ed25519
 noctalia.zip
 para_skel.zip
+
+# Excepción: fondo por defecto de Noctalia en el skel (debe versionarse)
+!airootfs/etc/skel/.cache/
+!airootfs/etc/skel/.cache/noctalia/
+!airootfs/etc/skel/.cache/noctalia/wallpapers.json

@@ -144,15 +144,22 @@ Pasos sugeridos:
 - Favoritos: reponer `kactivitymanagerd-statsrc` desde `skel.new4.zip` y volver al `Prepend` anterior. No recomendado: el `Prepend` con comas es inválido.
 - Botones: quitar la sección `[org.kde.kdecoration2]` de `kwinrc` (vuelve al default `MSE` / `HIAX`).
 
-## Tarea pendiente: fondos de pantalla (Helix Linux)
+## Fondos de pantalla (Helix Linux) — HECHO
 
-Al reanudar la sesión, agregar fondos de pantalla al perfil Helix:
+Los wallpapers ya están integrados en el perfil (verificado con Noctalia v4):
 
-- Perfil activo: `/home/m4teo/Downloads/helix-iso-v2/helix-min-releng` (repo `archlatam/helix-min-releng`, rama `main`).
-- Lugar sugerido para los assets: `airootfs/usr/share/backgrounds/helix/` (crear el directorio).
-- También considerar `airootfs/etc/skel/.config/noctalia/settings.json` / la configuración de Noctalia si el fondo se setea desde la shell (Noctalia v4), y el `background-color` de `airootfs/etc/skel/.config/niri/config.kdl` si se quiere un color de respaldo Catppuccin.
-- Paleta de referencia: Catppuccin Mocha (`#1e1e2e`, `#181825`, `#cba6f7`, `#cdd6f4`).
-- Verificación: `./build.sh` y revisar en el live que el fondo se vea en niri/Noctalia.
-- Commitear y pushear cuando esté listo (el usuario suele pedir `git commit && git push` explícitamente).
+- Assets en `airootfs/usr/share/helix/wallpapers/` (9 imágenes; `dino.jpg` 3000x1688 es el fondo por defecto).
+- `airootfs/etc/skel/.config/noctalia/settings.json`: `wallpaper.directory = "/usr/share/helix/wallpapers"`, `enabled: true`, `fillMode: crop`, `useSolidColor: false`.
+- `airootfs/etc/skel/.cache/noctalia/wallpapers.json`: `defaultWallpaper = "/usr/share/helix/wallpapers/dino.jpg"` (excepción en `.gitignore` para que se versione).
+- niri no dibuja fondos: Noctalia es el proveedor vía layer-shell; no agregar `swaybg` (se superpondría).
 
-Nota: los logos de Calamares (`productIcon`, `productLogo`, `productWelcome`, `banner` en `airootfs/etc/calamares/branding/default/branding.desc`) siguen pendientes y se harán después de los fondos.
+Verificación en el live: `qs -c noctalia-shell ipc call wallpaper get` debe devolver esa ruta; `journalctl --user -b | grep -i wallpaper`.
+
+## Tarea pendiente: logos de Calamares
+
+Los logos siguen pendientes (después de los fondos):
+
+- Archivo: `airootfs/etc/calamares/branding/default/branding.desc`.
+- Claves: `images.productIcon`, `productLogo`, `productWelcome` y `productBanner` (esta última comentada).
+- Hoy apuntan a `squid.png` / `languages.png` de Calamares, no a Helix.
+- Reemplazar por assets Helix cuando estén listos, con el mismo formato/paleta Catppuccin.
