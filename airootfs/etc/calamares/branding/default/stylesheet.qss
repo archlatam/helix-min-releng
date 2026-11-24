@@ -94,3 +94,78 @@ QPushButton#aboutButton { qproperty-icon: url(:/data/images/release.svg); }
 #licenseItem {  }
 #licenseItemFullText {  }
 */
+
+/* ── Helix Linux: Catppuccin Mocha (igual que niri/GTK/Kvantum) ── */
+/* Paleta: base #1e1e2e · mantle #181825 · crust #11111b · text #cdd6f4
+   mauve #cba6f7 · blue #89b4fa · green #a6e3a1 · surface1 #45475a */
+
+#mainApp {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+#sidebarApp {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+QLabel, QCheckBox, QRadioButton, QGroupBox {
+    color: #cdd6f4;
+}
+
+QLineEdit, QComboBox, QSpinBox, QTextEdit {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #45475a;
+    border-radius: 3px;
+    padding: 2px 4px;
+}
+
+QPushButton {
+    background-color: #45475a;
+    color: #cdd6f4;
+    border: 1px solid #585b70;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+
+QPushButton:hover {
+    background-color: #585b70;
+}
+
+QPushButton:pressed {
+    background-color: #cba6f7;
+    color: #11111b;
+}
+
+QPushButton:disabled {
+    background-color: #313244;
+    color: #585b70;
+}
+
+QProgressBar {
+    background-color: #181825;
+    border: 1px solid #45475a;
+    border-radius: 3px;
+    text-align: center;
+    color: #cdd6f4;
+}
+
+QProgressBar::chunk {
+    background-color: #cba6f7;
+}
+
+QTabWidget::pane {
+    border: 1px solid #45475a;
+}
+
+QTabBar::tab {
+    background: #181825;
+    color: #cdd6f4;
+    padding: 4px 10px;
+}
+
+QTabBar::tab:selected {
+    background: #cba6f7;
+    color: #11111b;
+}

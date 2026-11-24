@@ -192,7 +192,7 @@ kvantum-theme-catppuccin-git
 
 # --- Instalador (repo [archlatam]) ---
 calamares-core
-helix-calamares-config
+#helix-calamares-config
 archlatam-welcome
 paru
 brave-origin-bin
