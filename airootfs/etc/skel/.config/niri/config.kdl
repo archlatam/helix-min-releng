@@ -51,6 +51,25 @@ environment {
     XCURSOR_SIZE "24"
 }
 
+// Instalador y bienvenida: flotantes y centradas al abrir.
+window-rule {
+    match title="ArchLatam Welcome"
+    match app-id="ArchLatam Welcome"
+    match app-id="archlatam-welcome"
+    open-floating true
+    default-column-width { fixed 760; }
+    default-window-height { fixed 600; }
+}
+
+window-rule {
+    match title="Helix Linux Installer"
+    match app-id="Calamares"
+    match app-id="calamares"
+    open-floating true
+    default-column-width { fixed 800; }
+    default-window-height { fixed 520; }
+}
+
 // Noctalia v4 se carga como config de Quickshell (sin binario propio).
 // También se abre el welcome y el agente polkit para Calamares/pkexec.
 spawn-at-startup "qs" "-c" "noctalia-shell"
