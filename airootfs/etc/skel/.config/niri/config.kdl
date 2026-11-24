@@ -5,7 +5,7 @@
 input {
     keyboard {
         xkb {
-            layout "latam"
+            layout "us"
         }
         numlock
     }
@@ -70,6 +70,15 @@ window-rule {
     default-window-height { fixed 520; }
 }
 
+// Configurador de resolución: flotante y centrado.
+window-rule {
+    match title="wdisplays"
+    match app-id="wdisplays"
+    open-floating true
+    default-column-width { fixed 800; }
+    default-window-height { fixed 600; }
+}
+
 // Noctalia v4 se carga como config de Quickshell (sin binario propio).
 // También se abre el welcome y el agente polkit para Calamares/pkexec.
 spawn-at-startup "qs" "-c" "noctalia-shell"
@@ -80,6 +89,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+Return { spawn "kitty"; }
+    Mod+P { spawn "wdisplays"; }
     Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
 
     Mod+Q { close-window; }

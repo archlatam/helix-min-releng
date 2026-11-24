@@ -24,6 +24,19 @@ main() {
 ########## Started (UTC): $(date -u "+%x %X")
 EOF
 
+    # --- Navegador por defecto: los botones de welcome usan QDesktopServices ---
+    # Si no hay navegador instalado, los links no abren nada.
+    {
+        echo "########## Registrando navegador por defecto"
+        if command -v xdg-settings >/dev/null 2>&1; then
+            xdg-settings set default-web-browser brave-origin.desktop 2>&1 || true
+        fi
+        if command -v gio >/dev/null 2>&1; then
+            gio mime x-scheme-handler/http brave-origin.desktop 2>&1 || true
+            gio mime x-scheme-handler/https brave-origin.desktop 2>&1 || true
+        fi
+    } >> "$log" 2>&1
+
     # --- Hora: primero, para que las claves no se creen con fecha incorrecta ---
     timedatectl set-ntp true
     for _ in $(seq 15); do

@@ -162,6 +162,7 @@ xl2tpd
 # testear
 
 # --- core linux
+wdisplays-git
 kitty
 niri
 xwayland-satellite
