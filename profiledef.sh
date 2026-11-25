@@ -4,7 +4,7 @@ iso_name="helix"
 iso_label="HELIX_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="Helix Linux <https://github.com/archlatam>"
 iso_application="Helix Linux Live/Install"
-iso_version="1.0"
+iso_version="1.1"
 install_dir="arch"
 buildmodes=('iso')
 ## Boot modes: BIOS legacy + UEFI (GRUB)
