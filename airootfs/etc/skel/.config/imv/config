@@ -1,0 +1,18 @@
+[binds]
+
+# Helix Linux — imv (visor de imágenes Wayland), basado en la config de Omarchy.
+
+# Imprimir la ruta de la imagen actual
+<Ctrl+p> = exec printf '%s\n' "$imv_current_file"
+
+# Enviar a la papelera y salir
+<Ctrl+x> = exec gio trash -- "$imv_current_file"; quit
+
+# Enviar a la papelera y pasar a la siguiente
+<Ctrl+Shift+X> = exec gio trash -- "$imv_current_file"; close
+
+# Rotar 90 grados (ImageMagick ya está en el ISO)
+<Ctrl+r> = exec magick "$imv_current_file" -rotate 90 "$imv_current_file"
+
+# Ver en terminal con chafa (útil en kitty)
+<Ctrl+t> = exec chafa "$imv_current_file"

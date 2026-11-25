@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Helix Linux — grabación de pantalla con gpu-screen-recorder y fallback a wf-recorder.
+# Uso: helix-record [region|monitor]  (por defecto: region)
+set -u
+
+MODE="${1:-region}"
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
+PID_FILE="$RUNTIME_DIR/helix-record.pid"
+VIDEO_DIR="$(xdg-user-dir VIDEOS 2>/dev/null || true)"
+
+# En live con LANG=C.UTF-8, xdg-user-dir devuelve ~/Videos (inglés).
+# Si el usuario tiene locale ES, devuelve ~/Vídeos. Si falla, usar Videos.
+if [[ -z "$VIDEO_DIR" ]]; then
+    VIDEO_DIR="$HOME/Videos"
+fi
+mkdir -p "$VIDEO_DIR"
+OUT="$VIDEO_DIR/helix-$(date +%Y%m%d-%H%M%S).mp4"
+
+# Si ya hay una grabación, detenerla.
+if [[ -f "$PID_FILE" ]]; then
+    old_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
+    if [[ -n "$old_pid" ]] && kill -0 "$old_pid" 2>/dev/null; then
+        kill -INT "$old_pid" 2>/dev/null || true
+        sleep 1
+        kill -0 "$old_pid" 2>/dev/null && kill -TERM "$old_pid" 2>/dev/null || true
+        echo "helix-record: grabación detenida: $OUT"
+    fi
+    rm -f "$PID_FILE"
+    exit 0
+fi
+
+pick_region() {
+    # slurp entrega "WxH+X+Y", tal como lo pide gpu-screen-recorder -region.
+    slurp -f '%wx%h+%x+%y' 2>/dev/null || true
+}
+
+REGION=""
+if [[ "$MODE" == "region" ]]; then
+    REGION="$(pick_region)"
+    [[ -n "$REGION" ]] || { echo 'helix-record: selección cancelada'; exit 0; }
+fi
+
+start_gpu() {
+    local args=(-w region -region "$REGION" -k h264 -f 60 -fm cfr
+                -fallback-cpu-encoding yes -o "$OUT")
+    gpu-screen-recorder "${args[@]}" >/dev/null 2>&1 &
+    echo $!
+}
+
+start_wf() {
+    # wf-recorder quiere "X,Y WxH".
+    local wh="${REGION%%+*}" xy="${REGION#*+}"
+    local w="${wh%x*}" h="${wh#*x}" x="${xy%+*}" y="${xy#*+}"
+    wf-recorder -g "$x,$y ${w}x${h}" -r 60 -f "$OUT" >/dev/null 2>&1 &
+    echo $!
+}
+
+if [[ "$MODE" == "monitor" ]]; then
+    if command -v gpu-screen-recorder >/dev/null 2>&1; then
+        gpu-screen-recorder -w focused -k h264 -f 60 -o "$OUT" >/dev/null 2>&1 &
+    elif command -v wf-recorder >/dev/null 2>&1; then
+        wf-recorder -r 60 -f "$OUT" >/dev/null 2>&1 &
+    else
+        echo 'helix-record: no hay grabador instalado'; exit 1
+    fi
+else
+    if command -v gpu-screen-recorder >/dev/null 2>&1; then
+        gpu_pid="$(start_gpu)"
+        sleep 1
+        if ! kill -0 "$gpu_pid" 2>/dev/null; then
+            command -v wf-recorder >/dev/null 2>&1 || { echo 'helix-record: gpu-screen-recorder falló y no hay wf-recorder'; exit 1; }
+            gpu_pid="$(start_wf)"
+        fi
+    elif command -v wf-recorder >/dev/null 2>&1; then
+        gpu_pid="$(start_wf)"
+    else
+        echo 'helix-record: no hay grabador instalado'; exit 1
+    fi
+fi
+
+echo "$gpu_pid" > "$PID_FILE"
+echo "helix-record: grabando en $OUT (volver a pulsar para detener)"

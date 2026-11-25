@@ -46,6 +46,12 @@ hwdetect
 hwinfo
 hyperv
 imagemagick
+slurp
+imv
+chafa
+gpu-screen-recorder
+wf-recorder
+ffmpeg
 imwheel
 inetutils
 intel-ucode

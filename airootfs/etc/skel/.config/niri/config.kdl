@@ -99,6 +99,8 @@ binds {
     Mod+Return { spawn "kitty"; }
     Mod+Shift+Return { spawn "kitty" "--class" "kitty-floating"; }
     Mod+P { spawn "wdisplays"; }
+    Mod+I { spawn "imv" "-r" "/usr/share/helix/wallpapers"; }
+    Mod+Shift+R { spawn "helix-record"; }
     Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
 
     Mod+Q { close-window; }

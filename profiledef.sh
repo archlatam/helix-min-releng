@@ -4,7 +4,7 @@ iso_name="helix"
 iso_label="HELIX_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="Helix Linux <https://github.com/archlatam>"
 iso_application="Helix Linux Live/Install"
-iso_version="1.1"
+iso_version="1.2"
 install_dir="arch"
 buildmodes=('iso')
 ## Boot modes: BIOS legacy + UEFI (GRUB)
@@ -29,6 +29,7 @@ file_permissions=(
   ["/usr/local/bin/pkexec-wrapper"]="0:0:755"
   ["/usr/local/bin/Installation_guide"]="0:0:755"
   ["/usr/local/bin/customize-profile.sh"]="0:0:755"
+  ["/usr/local/bin/helix-record"]="0:0:755"
   ["/root/customize_airootfs.sh"]="0:0:755"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
   ["/etc/mkinitcpio.d/linux.preset"]="0:0:644"
