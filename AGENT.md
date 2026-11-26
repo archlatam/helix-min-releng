@@ -155,11 +155,43 @@ Los wallpapers ya están integrados en el perfil (verificado con Noctalia v4):
 
 Verificación en el live: `qs -c noctalia-shell ipc call wallpaper get` debe devolver esa ruta; `journalctl --user -b | grep -i wallpaper`.
 
-## Tarea pendiente: logos de Calamares
+## Calamares: branding Helix — HECHO
 
-Los logos siguen pendientes (después de los fondos):
+Assets propios en `airootfs/etc/calamares/branding/default/`, todos con `.license`
+`SPDX-FileCopyrightText: 2026 Helix Linux` + `SPDX-License-Identifier: CC0-1.0`:
 
-- Archivo: `airootfs/etc/calamares/branding/default/branding.desc`.
-- Claves: `images.productIcon`, `productLogo`, `productWelcome` y `productBanner` (esta última comentada).
-- Hoy apuntan a `squid.png` / `languages.png` de Calamares, no a Helix.
-- Reemplazar por assets Helix cuando estén listos, con el mismo formato/paleta Catppuccin.
+| Archivo | Uso | Detalle |
+|---|---|---|
+| `logo.png` | `productIcon`, `productLogo` (y slide 1 de `show.qml`) | Logo Helix; originalmente 344×406, se rellenó con `#1e1e2e` hasta 406×406 para que sea cuadrado (Calamares recomienda cuadrado para iconos de 16×16 y 80×80). |
+| `welcome.png` | `productWelcome` | Nube de idiomas en paleta Catppuccin sobre `#1e1e2e`, 640×300 (2× el recomendado 320×150, porque `welcomeExpandingLogo: true` escala la imagen). Generada con SVG + `rsvg-convert` y fuentes Noto. |
+| `buttons.png` | slideshow (`show.qml`) | 3840×2160, 6 bloques pastel sobre `#1e1e2e`; se muestra en el slide de copia. |
+
+- `branding.desc`: `productIcon`/`productLogo` → `logo.png`, `productWelcome` → `welcome.png`. No se tocó `slideshow: "show.qml"` ni `slideshowAPI: 2`.
+- `show.qml` (API 2): `onActivate()` pone `presentation.currentSlide = 2` para mostrar la imagen desde el inicio; no hay `Timer`. El slide de copia usa `Image { source: "buttons.png"; anchors.fill: parent; fillMode: Image.PreserveAspectCrop }` y el texto abajo (`anchors.bottom`, `bottomMargin: 28`) para no tapar los botones. Las rutas de imagen son relativas al directorio del branding (no absolutas).
+- `squid.png`, `languages.png`, `banner.png` y sus `.license` (GPL-3.0, KDE) se dejaron intactos, ahora sin uso.
+- Tras editar hay que **reconstruir la ISO**: el QML se compila al iniciar Calamares.
+
+## Menú de arranque: opciones NVIDIA / gráficos seguros — HECHO
+
+El live es Wayland puro: SDDM hace autologin a `niri.desktop` (`airootfs/etc/sddm.conf.d/10-helix-live.conf`). No hay sesión X11 de respaldo en el perfil. Por eso:
+
+- `nouveau.modeset=1` fuerza el driver libre y **conserva** el escritorio.
+- `nomodeset` desactiva KMS: niri no puede iniciarse y solo se obtiene una consola/framebuffer básico. Es opción de diagnóstico/rescate, **no** una sesión gráfica funcional.
+- El driver propietario **no está en el live**. NVIDIA se instala después en el sistema instalado mediante el módulo `netinstall@nvidia` (`airootfs/etc/calamares/modules/netinstall-nvidia.yaml`). En el live, `nvidia_drm.modeset=1` no tiene efecto (el módulo no existe) y `modprobe.blacklist=nouveau` dejaría al equipo sin ningún driver.
+
+Entradas añadidas: `helix-nouveau` (hotkey `n`, `nouveau.modeset=1`) y `helix-safe` (hotkey `g`, `nomodeset`).
+
+- `grub/grub.cfg` (UEFI): en `helix-safe`, `if [ "${grub_platform}" == "pc" ]` → `set gfxpayload=1024x768x32,1024x768,auto`; en EFI, `keep`. Así se consigue framebuffer VESA en BIOS aun con `nomodeset`.
+- `grub/loopback.cfg`: mismas entradas con `img_dev=UUID=${archiso_img_dev_uuid} img_loop="${iso_path}"` y `cow_spacesize=4G copytoram=n`.
+- `syslinux/archiso_sys-linux.cfg` (BIOS): `LABEL helixnouveau` y `LABEL helixsafe` (esta con `vga=791`, equivalente BIOS del `gfxpayload`).
+- `efiboot/loader/entries/*` no se tocó: `profiledef.sh` usa `bootmodes=('bios.syslinux' 'uefi.grub')`, no systemd-boot.
+
+## Paquetes gráficos — HECHO
+
+`packages.x86_64`: `mesa` (ya estaba) más `vulkan-intel`, `vulkan-radeon`, `vulkan-nouveau` e `intel-media-driver`, para aceleración Vulkan/VA-API en Intel, AMD y NVIDIA (driver libre).
+
+## Brave desde `core_repo` — HECHO
+
+- `packages.x86_64`: `brave-origin-bin` → `core_repo/brave-origin-bin` (en `core_repo` está la versión `1:1.100.58-1`; en el repo local `[archlatam]` está la `1:1.98.63-1`).
+- Motivo: `pacman.conf` declara `[archlatam]` antes que `[core_repo]` y pacman resuelve por orden de repositorio, no por versión, así que siempre ganaba el paquete local. El prefijo `core_repo/` fuerza ese repo solo para Brave sin afectar al resto (`calamares-core`, `archlatam-welcome`, `noctalia`, etc.).
+- Verificar en el build: `pacstrap` debe descargar `brave-origin-bin-1:1.100.58-1-x86_64.pkg.tar.zst`.

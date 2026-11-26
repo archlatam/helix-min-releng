@@ -13,7 +13,8 @@ Presentation {
 
     function onActivate() {
         activatedInCalamares = true;
-        presentation.currentSlide = 0;
+        // Mostrar directamente el slide de la imagen durante la copia.
+        presentation.currentSlide = 2;
     }
 
     function onLeave() {
@@ -39,7 +40,7 @@ Presentation {
         }
         Image {
             id: logo
-            source: "squid.png"
+            source: "logo.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 24
@@ -94,14 +95,21 @@ Presentation {
             anchors.fill: parent
             color: c.base
         }
+        Image {
+            source: "buttons.png"
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectCrop
+        }
         Text {
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 28
+            width: parent.width - 40
             text: "Copiando la imagen live e instalando GRUB…"
-            color: c.mauve
-            font.pixelSize: 14
+            color: c.text
+            font.pixelSize: 13
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
-            width: parent.width - 40
         }
     }
 }

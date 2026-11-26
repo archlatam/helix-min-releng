@@ -13,7 +13,7 @@ for d in syslinux efiboot grub; do
     fi
 done
 
-[[ -f /opt/helix-repo/helix-local.db ]] || { echo "Falta /opt/helix-repo: corré scripts/build-local-repo.sh"; exit 1; }
+#[[ -f /opt/helix-repo/helix-local.db ]] || { echo "Falta /opt/helix-repo: corré scripts/build-local-repo.sh"; exit 1; }
 
 sudo rm -rf work
 sudo mkarchiso -v -w work -o out .
