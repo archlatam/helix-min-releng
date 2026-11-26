@@ -165,9 +165,11 @@ Assets propios en `airootfs/etc/calamares/branding/default/`, todos con `.licens
 | `logo.png` | `productIcon`, `productLogo` (y slide 1 de `show.qml`) | Logo Helix; originalmente 344×406, se rellenó con `#1e1e2e` hasta 406×406 para que sea cuadrado (Calamares recomienda cuadrado para iconos de 16×16 y 80×80). |
 | `welcome.png` | `productWelcome` | Nube de idiomas en paleta Catppuccin sobre `#1e1e2e`, 640×300 (2× el recomendado 320×150, porque `welcomeExpandingLogo: true` escala la imagen). Generada con SVG + `rsvg-convert` y fuentes Noto. |
 | `buttons.png` | slideshow (`show.qml`) | 3840×2160, 6 bloques pastel sobre `#1e1e2e`; se muestra en el slide de copia. |
+| `wallpaper.png` | `productWallpaper` | 800×520 (igual que `windowSize`), fondo liso `#1e1e2e` para todas las páginas. |
 
 - `branding.desc`: `productIcon`/`productLogo` → `logo.png`, `productWelcome` → `welcome.png`. No se tocó `slideshow: "show.qml"` ni `slideshowAPI: 2`.
 - `show.qml` (API 2): `onActivate()` pone `presentation.currentSlide = 2` para mostrar la imagen desde el inicio; no hay `Timer`. El slide de copia usa `Image { source: "buttons.png"; anchors.fill: parent; fillMode: Image.PreserveAspectCrop }` y el texto abajo (`anchors.bottom`, `bottomMargin: 28`) para no tapar los botones. Las rutas de imagen son relativas al directorio del branding (no absolutas).
+- Márgenes blancos en el slideshow: `ViewManager::insertViewStep()` aplica los márgenes de layout del estilo Qt a cada página, y la barra de progreso/mensaje (`#exec-progress`, `#exec-message`) queda **fuera** del QML, así que la imagen no puede cubrirla. `stylesheet.qss` pinta `#viewManager`, `#viewManagerStack`, `#slideshow`, el `QTabWidget`, el `QQuickWidget` y la barra de progreso con `#1e1e2e` (el mismo fondo de `buttons.png`) para que no se vea el borde. `productWallpaper` refuerza el fondo en todas las páginas.
 - `squid.png`, `languages.png`, `banner.png` y sus `.license` (GPL-3.0, KDE) se dejaron intactos, ahora sin uso.
 - Tras editar hay que **reconstruir la ISO**: el QML se compila al iniciar Calamares.
 
@@ -195,3 +197,16 @@ Entradas añadidas: `helix-nouveau` (hotkey `n`, `nouveau.modeset=1`) y `helix-s
 - `packages.x86_64`: `brave-origin-bin` → `core_repo/brave-origin-bin` (en `core_repo` está la versión `1:1.100.58-1`; en el repo local `[archlatam]` está la `1:1.98.63-1`).
 - Motivo: `pacman.conf` declara `[archlatam]` antes que `[core_repo]` y pacman resuelve por orden de repositorio, no por versión, así que siempre ganaba el paquete local. El prefijo `core_repo/` fuerza ese repo solo para Brave sin afectar al resto (`calamares-core`, `archlatam-welcome`, `noctalia`, etc.).
 - Verificar en el build: `pacstrap` debe descargar `brave-origin-bin-1:1.100.58-1-x86_64.pkg.tar.zst`.
+
+## Selector de drivers NVIDIA en Calamares — HECHO
+
+- `airootfs/etc/calamares/modules/netinstall-nvidia.yaml`: tres grupos (descripciones en inglés), uno por opción **incompatible** entre sí:
+  - `nvidia-open-dkms` + `nvidia-utils` + `nvidia-settings` ([extra], versión 620.73.04; `nvidia-open-dkms` depende de `dkms` y `nvidia-utils=620.73.04`).
+  - `nvidia-580xx-dkms` + `nvidia-580xx-utils` + `opencl-nvidia-580xx` (580.196.07, desde `core_repo`).
+  - `nvidia-470xx-dkms` + `nvidia-470xx-utils` + `opencl-nvidia-470xx` (470.256.02, desde `core_repo`).
+  - Calamares no tiene grupos "radio": las descripciones advierten *Please select only one option*. No incluir `nvidia-settings` de `[extra]` en las opciones 580/470: conflictúa con sus `nvidia-utils`.
+  - **No incluir paquetes lib32**: no son necesarios para el driver (el `nvidia-580xx-utils` `-1` recién compilado ya no depende de ellos) y dejarían las categorías inconsistentes. `lib32-nvidia-580xx-utils` (core_repo) es opcional para apps de 32 bits y conflictúa con `lib32-nvidia-utils` (multilib); se instala manualmente si se necesita.
+- `airootfs/usr/local/bin/archlatam-installer`: el módulo `netinstall@nvidia` se **elimina** de `settings.conf` cuando **no** hay NVIDIA detectada y se **conserva** cuando sí la hay (antes era al revés). La detección usa `lspci -nn -d 10de:` (vendor `10de`).
+- Publicar en `core_repo` (fuera de este repo) los tres paquetes compilados en `/home/m4teo/nvidia-580xx-utils` (`nvidia-580xx-utils`, `nvidia-580xx-dkms`, `opencl-nvidia-580xx`, todos `580.196.07-1`) con `x86_64/update_repo.sh --strict`. Los binarios `-1` eliminaron las dependencias rotas de `opencl-nvidia-580xx`/`lib32-opencl-nvidia-580xx` que tenían los `-2` publicados anteriormente.
+- Netinstall no permite fijar repo: `PackageTreeItem::toOperation()` pasa solo el nombre a `pacman -S`. Los nombres exclusivos de `core_repo` se resuelven ahí automáticamente.
+- No hay generación automática en el build: `mkarchiso` copia el YAML tal cual y el módulo netinstall de Calamares lo lee en tiempo de instalación desde `groupsUrl: file:///etc/calamares/modules/netinstall-nvidia.yaml`.

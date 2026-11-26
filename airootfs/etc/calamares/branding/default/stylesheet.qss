@@ -104,6 +104,19 @@ QPushButton#aboutButton { qproperty-icon: url(:/data/images/release.svg); }
     color: #cdd6f4;
 }
 
+/* Calamares aplica margenes de layout a cada pagina (ViewManager::insertViewStep)
+   y la franja del progress bar queda fuera del QML del slideshow. Pintamos esos
+   contenedores del mismo tono que buttons.png para que no aparezcan bordes blancos. */
+#viewManager,
+#viewManagerStack,
+#slideshow,
+#slideshow QTabWidget,
+#slideshow QQuickWidget,
+#exec-progress,
+#exec-message {
+    background-color: #1e1e2e;
+}
+
 #sidebarApp {
     background-color: #1e1e2e;
     color: #cdd6f4;

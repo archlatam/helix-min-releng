@@ -1,12 +1,34 @@
 groups:
-  - name: "Drivers NVIDIA"
-    description: " driver NVIDIA."
-    expanded: true 
+  - name: "NVIDIA open (recommended)"
+    description: "Open kernel modules (Turing+). Please select only one option."
+    expanded: true
     selected: false
     packages:
-      - name: "nvidia"
-        description: "Proprietary NVIDIA driver for modern cards"
+      - name: "nvidia-open-dkms"
+        description: "NVIDIA open kernel modules - DKMS"
       - name: "nvidia-utils"
-        description: "NVIDIA utilities and libraries"
+        description: "NVIDIA utilities (620.73.04)"
       - name: "nvidia-settings"
         description: "NVIDIA graphical configuration tool"
+  - name: "NVIDIA 580xx"
+    description: "580 series. Please select only one option."
+    expanded: false
+    selected: false
+    packages:
+      - name: "nvidia-580xx-dkms"
+        description: "NVIDIA 580xx DKMS module"
+      - name: "nvidia-580xx-utils"
+        description: "NVIDIA 580xx utilities"
+      - name: "opencl-nvidia-580xx"
+        description: "OpenCL support for NVIDIA 580xx"
+  - name: "NVIDIA 470xx"
+    description: "470 series for older cards. Please select only one option."
+    expanded: false
+    selected: false
+    packages:
+      - name: "nvidia-470xx-dkms"
+        description: "NVIDIA 470xx DKMS module"
+      - name: "nvidia-470xx-utils"
+        description: "NVIDIA 470xx utilities"
+      - name: "opencl-nvidia-470xx"
+        description: "OpenCL support for NVIDIA 470xx"

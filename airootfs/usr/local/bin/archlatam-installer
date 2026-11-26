@@ -75,14 +75,14 @@ EOF
 
     # --- Elección del settings ---
     # helix-calamares-config instala por unpackfs (copia del squashfs), no por
-    # pacstrap: netinstall@nvidia no aplica. Si hay NVIDIA se quita esa entrada
-    # del propio settings.conf y se avisa que el driver va después del arranque.
+    # pacstrap. El módulo netinstall@nvidia se ofrece solo con GPU NVIDIA:
+    # se elimina de settings.conf cuando no hay NVIDIA y se conserva si la hay.
     local settings="${conf_dir}/settings.conf"
 
     cat <<EOF >> "$log"
 ########## Firmware: $FIRMWARE
 ########## NVIDIA detectada: $GPU
-########## settings usado: $settings (unpackfs, sin netinstall@nvidia)
+########## settings usado: $settings (unpackfs, netinstall@nvidia segun GPU)
 EOF
 
     if [ ! -f "$settings" ]; then
@@ -91,11 +91,14 @@ EOF
         exit 1
     fi
 
-    if [ "$GPU" = "si" ]; then
+    # El modulo netinstall@nvidia se ofrece SOLO en maquinas con GPU NVIDIA detectada.
+    if [ "$GPU" = "no" ]; then
         sudo sed -i '/^[[:space:]]*-[[:space:]]*netinstall@nvidia[[:space:]]*$/d' \
             "$settings" >> "$log" 2>&1
-        echo "AVISO: NVIDIA detectada; instalar el controlador tras el primer arranque" >> "$log"
-        notify-send "Helix Linux" "NVIDIA detectada: instale el controlador después de arrancar" 2>/dev/null
+        echo "AVISO: sin NVIDIA; se oculta el modulo netinstall@nvidia" >> "$log"
+    else
+        echo "NVIDIA detectada: se ofrece el modulo netinstall@nvidia" >> "$log"
+        notify-send "Helix Linux" "NVIDIA detectada: podra elegir el controlador durante la instalacion" 2>/dev/null
     fi
 
     exec pkexec-wrapper calamares -D6 >> "$log" 2>&1
